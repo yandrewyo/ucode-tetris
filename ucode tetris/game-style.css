@@ -1,0 +1,129 @@
+.grid {
+  width: 200px;
+  height: 400px;
+  background-color: black;
+  display: flex;
+  flex-wrap: wrap;
+  text-align: center;
+}
+
+p {
+  font-family: 'Comfortaa', cursive;
+}
+
+a {
+  font-family: 'Comfortaa', cursive;
+  text-decoration: none;
+  color: blue;
+  background-color: white;
+  border: solid 2px black;
+}
+
+a:hover {
+  cursor: pointer;
+}
+
+.grid div {
+  height: 20px;
+  width: 20px;
+}
+
+
+button {
+  height: 45px;
+  font-family: 'Comfortaa', cursive;
+  margin-top: 5px;
+  background-image: radial-gradient(aquamarine, mediumturquoise);
+  border-radius: 75px;
+  margin-bottom: 10px;
+  width: 125px;
+  margin-left: 15%;
+  transition: transform, 0.25s;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+button:active {
+  transform: scale(0.9905);
+}
+
+h3 {
+  font-family: 'Comfortaa', cursive;
+}
+
+.tetrimino {
+  background-size: cover;
+}
+
+.saved-grid {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  flex-wrap: wrap;
+  border-radius: 20%;
+  margin: auto;
+  margin-top: 10px;
+}
+
+.left-tools {
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: solid;
+  background-color: grey;
+  border-right: none;
+  border-top-left-radius: 75px;
+  border-bottom-left-radius: 75px;
+}
+
+.right-tools {
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: solid;
+  background-color: grey;
+  border-left: none;
+  border-top-right-radius: 75px;
+  border-bottom-right-radius: 75px;
+}
+
+.mini-grid {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  flex-wrap: wrap;
+  border-radius: 20%;
+  margin: auto;
+  margin-top: 10px;
+}
+
+.mini-grid div {
+  height: 20px;
+  width: 20px;
+}
+
+.saved-grid div {
+  height: 20px;
+  width: 20px;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+body {
+  width: 90%;
+  background-color: #1f53e0;
+  background-size: cover;
+  margin: auto;
+  text-align: center;
+}
+
+h1 {
+  font-family: 'Comfortaa', cursive;
+}

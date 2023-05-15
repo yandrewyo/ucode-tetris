@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&display=swap" rel="stylesheet">
+    <meta charset="utf-8">
+    <link href="style.css" rel="stylesheet">
+    <title>Tetris: JavaScript</title>
+    <script src="script.js" charset="utf-8"></script>
+  </head>
+  
+  <body>
+    <h1>TETRIS</h1>
+    <h3>PLEASE REFRAIN FROM ADDING KEYS UNIQUE TO YOUR DEVICE. <br>
+    IT MAY BUG THE GAME. BACKSPACE WILL NOT BE ALLOWED AS AN INPUT. <br>
+    CONTROLS FOR MOVING IS AUTOMATICALLY THE ARROW KEYS AND A/D. <br>
+    IT IS REQUIRED TO CHOOSE CONTROLS. <br>
+    DO NOT USE AUTOFILL. MAKE SURE YOUR CAPS LOCK IS OFF.</h3>
+    
+    <main>
+      <form action="game.html">
+        <fieldset>
+          <label>Soft Drop Control</label>
+          <input size="1" id="sd" maxlength="1" onkeydown="keySoft(event)" required>
+          <p id="clrButton1">Clear</p>
+        </fieldset>
+        <fieldset>
+          <label>Hard Drop Control</label>
+          <input size="1" id="hd" maxlength="1" onkeydown="keyHard(event)" required>
+          <p id="clrButton2">Clear</p>
+        </fieldset>
+        <fieldset>
+          <label>Rotate Control</label>
+          <input size="1" id="r" maxlength="1" onkeydown="keyRotate(event)" required>
+          <p id="clrButton3">Clear</p>
+        </fieldset>
+        <fieldset>
+          <label>Save Control</label>
+          <input size="1" id="s" maxlength="1" onkeydown="keySave(event)" required>
+          <p id="clrButton4">Clear</p>
+        </fieldset>
+        <fieldset>
+          <label>Reset Control</label>
+          <input size="1" id="re" maxlength="1" onkeydown="keyReset(event)" required>
+          <p id="clrButton5">Clear</p>
+        </fieldset>
+        <fieldset class="music">
+          <legend>Pick a Style of Music:</legend>
+          <label class="choice"><input type="radio" name="music" class="radio1" id="radio1" required>Classic</label>
+          <label class="choice"><input type="radio" name="music" class="radio2" id="radio2" required>Remix</label>
+          <label class="choice"><input type="radio" name="music" class="radio3" id="radio3" required>None</label>
+        </fieldset>
+        <br>
+        <input type="submit" value="GO TO GAME" id="submit">
+      </form>
+    </main>
+        
+        
+    
+    <script>
+      //key values
+      let softSelect = 0
+      let hardSelect = 0
+      let rotateSelect = 0
+      let saveSelect = 0
+      let resetSelect = 0
+      let keyTaken = [];
+      let setAble = true
+      let clear;
+      var test;
+      var key;
+      
+      //inputs
+      
+      
+      const input1 = document.getElementById("sd")
+      const input2 = document.getElementById("hd")
+      const input3 = document.getElementById("r")
+      const input4 = document.getElementById("s")
+      const input5 = document.getElementById("re")
+      
+      const radio1 = document.getElementById('radio1')
+      const radio2 = document.getElementById('radio2')
+      const radio3 = document.getElementById('radio3')
+      
+      const submit = document.getElementById('submit')
+      const clrButton1 = document.getElementById('clrButton1')
+      const clrButton2 = document.getElementById('clrButton2')
+      const clrButton3 = document.getElementById('clrButton3')
+      const clrButton4 = document.getElementById('clrButton4')
+      const clrButton5 = document.getElementById('clrButton5')
+      
+      console.log(input1)
+      
+      
+      
+      //music choice
+      var musicChoice = 0;
+      
+      //date
+      const date = new Date()
+      
+      
+      //get key and key code in input 1
+      function keySoft(event) {
+        if (input1.value.length === 0 && event.key != undefined && event.key != "Backspace" && event.key != "ArrowLeft" && event.key != "ArrowRight" && event.key != "a" && event.key != "d") {
+          for (var i = 0; i < keyTaken.length; i++) {
+            if (keyTaken[i] === event.key) {
+              softSelect = 0
+              input1.value = ""
+              keyTaken.splice(i, 1)
+              setAble = false
+            }
+          }
+          console.log(event)
+          softSelect = event.keyCode
+          input1.value = event.key
+          if (event.keyCode === 32) {
+            input1.value = "Space"
+          }
+          keyTaken.push(event.key)
+          if (input1.value.length === 1) {
+            console.log('hey')
+            input1.value = input1.value.toLowerCase()
+            for (var i = 0; i < keyTaken.length; i++) {
+              if (keyTaken[i].toLowerCase() === input1.value) {
+                keyTaken[i] = keyTaken[i].toLowerCase()
+                console.log(keyTaken)
+              }
+            }
+          }
+          if (setAble === true) {
+            console.log(keyTaken)
+            sessionStorage.setItem("softSelect", softSelect)
+          } else {
+            input1.value = "Taken"
+            setAble = true
+          }
+          
+        }
+      }
+      
+      //get key and key code in input 2
+      function keyHard(event) {
+        if (input2.value.length === 0 && event.key != "Unidentified" && event.key != "Backspace" && event.key != "ArrowLeft" && event.key != "ArrowRight" && event.key != "a" && event.key != "d") {
+          for (var i = 0; i < keyTaken.length; i++) {
+            if (keyTaken[i] === event.key) {
+              hardSelect = 0
+              input2.value = ""
+              keyTaken.splice(i, 1)
+              setAble = false
+            }
+          }
+          console.log(event)
+          hardSelect = event.keyCode
+          input2.value = event.key
+          if (event.keyCode === 32) {
+            input2.value = "Space"
+          }
+          keyTaken.push(event.key)
+          if (input2.value.length === 1) {
+            console.log('hey')
+            input2.value = input2.value.toLowerCase()
+            for (var i = 0; i < keyTaken.length; i++) {
+              if (keyTaken[i].toLowerCase() === input2.value) {
+                keyTaken[i] = keyTaken[i].toLowerCase()
+                console.log(keyTaken)
+              }
+            }
+          }
+          if (setAble === true) {
+            console.log(keyTaken)
+            sessionStorage.setItem("hardSelect", hardSelect)
+          } else {
+            input2.value = "Taken"
+            setAble = true
+          }
+        }
+      }
+      
+      //get key and key code in input 3
+      function keyRotate(event) {
+        if (input3.value.length === 0 && event.key != "Unidentified" && event.key != "Backspace" && event.key != "ArrowLeft" && event.key != "ArrowRight" && event.key != "a" && event.key != "d") {
+          for (var i = 0; i < keyTaken.length; i++) {
+            if (keyTaken[i] === event.key) {
+              rotateSelect = 0
+              input3.value = ""
+              keyTaken.splice(i, 1)
+              setAble = false
+            }
+          }
+          console.log(event)
+          rotateSelect = event.keyCode
+          input3.value = event.key
+          if (event.keyCode === 32) {
+            input3.value = "Space"
+          }
+          keyTaken.push(event.key)
+          if (input3.value.length === 1) {
+            console.log('hey')
+            input3.value = input3.value.toLowerCase()
+            for (var i = 0; i < keyTaken.length; i++) {
+              if (keyTaken[i].toLowerCase() === input3.value) {
+                keyTaken[i] = keyTaken[i].toLowerCase()
+                console.log(keyTaken)
+              }
+            }
+          }
+          if (setAble === true) {
+            console.log(keyTaken)
+            sessionStorage.setItem("rotateSelect", rotateSelect)
+          } else {
+            input3.value = "Taken"
+            setAble = true
+          }
+        }
+      }
+      
+      
+      //get key and key code in input 4
+      function keySave(event) {
+        if (input4.value.length === 0 && event.key != "Unidentified" && event.key != "Backspace" && event.key != "ArrowLeft" && event.key != "ArrowRight" && event.key != "a" && event.key != "d") {
+          for (var i = 0; i < keyTaken.length; i++) {
+            if (keyTaken[i] === event.key) {
+              saveSelect = 0
+              input4.value = ""
+              keyTaken.splice(i, 1)
+              setAble = false
+            }
+          }
+          console.log(event)
+          saveSelect = event.keyCode
+          input4.value = event.key
+          if (event.keyCode === 32) {
+            input4.value = "Space"
+          }
+          keyTaken.push(event.key)
+          if (input4.value.length === 1) {
+            console.log('hey')
+            input4.value = input4.value.toLowerCase()
+            for (var i = 0; i < keyTaken.length; i++) {
+              if (keyTaken[i].toLowerCase() === input4.value) {
+                keyTaken[i] = keyTaken[i].toLowerCase()
+                console.log(keyTaken)
+              }
+            }
+          }
+          if (setAble === true) {
+            console.log(keyTaken)
+            sessionStorage.setItem("saveSelect", saveSelect)
+          } else {
+            input4.value = "Taken"
+            setAble = true
+          }
+        }
+      }
+      
+      
+      //get key and key code in input 5
+      function keyReset(event) {
+        if (input5.value.length === 0 && event.key != "Unidentified" && event.key != "Backspace" && event.key != "ArrowLeft" && event.key != "ArrowRight" && event.key != "a" && event.key != "d") {
+          for (var i = 0; i < keyTaken.length; i++) {
+            if (keyTaken[i] === event.key) {
+              resetSelect = 0
+              input5.value = ""
+              keyTaken.splice(i, 1)
+              setAble = false
+            }
+          }
+          console.log(event)
+          resetSelect = event.keyCode
+          input5.value = event.key
+          if (event.keyCode === 32) {
+            input5.value = "Space"
+          }
+          keyTaken.push(event.key)
+          if (input5.value.length === 1) {
+            console.log('hey')
+            input5.value = input5.value.toLowerCase()
+            for (var i = 0; i < keyTaken.length; i++) {
+              if (keyTaken[i].toLowerCase() === input5.value) {
+                keyTaken[i] = keyTaken[i].toLowerCase()
+                console.log(keyTaken)
+              }
+            }
+          }
+          if (setAble === true) {
+            console.log(keyTaken)
+            sessionStorage.setItem("resetSelect", resetSelect)
+            sessionStorage.setItem("reset", input5.value)
+          } else {
+            input5.value = "Taken"
+            setAble = true
+          }
+        }
+      }
+      
+      
+      //clear input 1
+      clrButton1.addEventListener('click', () => {
+        for (var i = 0; i < keyTaken.length; i++) {
+          if (keyTaken[i] === input1.value) {
+            console.log(input1.value)
+            keyTaken.splice(i, 1)
+            console.log(keyTaken)
+          }
+        }
+        input1.value = ""
+      });
+      
+      //clear input 2
+      clrButton2.addEventListener('click', () => {
+        for (var i = 0; i < keyTaken.length; i++) {
+          if (keyTaken[i] === input2.value) {
+            console.log(input2.value)
+            keyTaken.splice(i, 1)
+            console.log(keyTaken)
+          }
+        }
+        input2.value = ""
+      });
+      
+      //clear input 3
+      clrButton3.addEventListener('click', () => {
+        for (var i = 0; i < keyTaken.length; i++) {
+          if (keyTaken[i] === input3.value) {
+            console.log(input3.value)
+            keyTaken.splice(i, 1)
+            console.log(keyTaken)
+          }
+        }
+        input3.value = ""
+      });
+      
+      //clear input 4
+      clrButton4.addEventListener('click', () => {
+        for (var i = 0; i < keyTaken.length; i++) {
+          if (keyTaken[i] === input4.value) {
+            console.log(input4.value)
+            keyTaken.splice(i, 1)
+            console.log(keyTaken)
+          }
+        }
+        input4.value = ""
+      });
+      
+      //clear input 5
+      clrButton5.addEventListener('click', () => {
+        for (var i = 0; i < keyTaken.length; i++) {
+          if (keyTaken[i] === input5.value) {
+            console.log(input5.value)
+            keyTaken.splice(i, 1)
+            console.log(keyTaken)
+          }
+        }
+        input5.value = ""
+      });
+      
+      //selec music
+      radio1.addEventListener('click', () => {
+        musicChoice = 1;
+      })
+      radio2.addEventListener('click', () => {
+        musicChoice = 2;
+      })
+      radio3.addEventListener('click', () => {
+        musicChoice = 3;
+      })
+      //submit
+        let testing = localStorage.getItem('highScore')
+        console.log(testing)
+      submit.addEventListener('click', () => {
+        sessionStorage.setItem('musicChoice', musicChoice)
+        if (testing == undefined || testing == null) {
+          localStorage.removeItem('highScore')
+          localStorage.setItem('highScore', 0)
+        }
+      })
+    </script>
+  </body>

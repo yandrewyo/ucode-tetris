@@ -1,0 +1,74 @@
+main {
+  width: 100%;
+  text-align: center;
+  margin: auto;
+}
+
+body{
+  width: 100%;
+  text-align: center;
+  margin: auto;
+}
+
+label {
+  margin-top: 25px;
+}
+
+input {
+  width: 250px;
+  margin: auto;
+  text-align: center;
+}
+
+button {
+  width: 300px;
+  margin: auto;
+}
+
+form {
+  margin: auto;
+  width: 300px;
+}
+
+.to-game {
+  width: 300px;
+  margin-left: 10px;
+}
+
+p {
+  margin: auto;
+  width: 250px;
+  border: solid 1px grey;
+  color: grey;
+  background-color: #f5f5f5;
+}
+
+p:hover {
+  background-color: #e3e3e3;
+  border: solid 0.5px black;
+}
+
+p:active {
+  background-color: #f5f5f5;
+  border: solid 0.5px grey;
+}
+
+.choice {
+  width: 200px;
+}
+
+fieldset {
+  width: 100%;
+  margin-left: 0px;
+}
+
+.radio1 {
+  width: 20px;
+}
+.radio2 {
+  width: 20px;
+}
+.radio3 {
+  width: 20px;
+}
+

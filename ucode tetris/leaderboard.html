@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&display=swap" rel="stylesheet">
+    <meta charset="utf-8">
+    <title>Tetris: JavaScript</title>
+    <link href="leaderboard-style.css" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-firestore.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  </head>
+  
+  <body>
+    <header>
+      <h1>Tetris Leaderboard</h1>
+      <a href="game.html" id="gamlink">Game</a>
+    </header>
+    
+    <main>
+        <table>
+          <thead>
+            <tr>
+              <th>Place</th><th>Score</th><th>Name</th><th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>1</th><td class="score"></td><td class="name"></td><td class="date"></td>
+            </tr>
+            <tr>
+              <th>2</th><td class="score"></td><td class="name"></td><td class="date"></td>
+            </tr>
+            <tr>
+              <th>3</th><td class="score"></td><td class="name"></td><td class="date"></td>
+            </tr>
+            <tr>
+              <th>4</th><td class="score"></td><td class="name"></td><td class="date"></td>
+            </tr>
+            <tr>
+              <th>5</th><td class="score"></td><td class="name"></td><td class="date"></td>
+            </tr>
+            <tr>
+              <th>6</th><td class="score"></td><td class="name"></td><td class="date"></td>
+            </tr>
+            <tr>
+              <th>7</th><td class="score"></td><td class="name"></td><td class="date"></td>
+            </tr>
+            <tr>
+              <th>8</th><td class="score"></td><td class="name"></td><td class="date"></td>
+            </tr>
+            <tr>
+              <th>9</th><td class="score"></td><td class="name"></td><td class="date"></td>
+            </tr>
+            <tr>
+              <th>10</th><td class="score"></td><td class="name"></td><td class="date"></td>
+            </tr>
+          </tbody>
+        </table>
+      <h2>High Score Stats</h2>
+      
+      <h3>Your High Score: <span class="high-score">0</span></h3>
+      <h3>Your High Score placed in the top <span class="place"></span>%</h3>
+      <h3 class='score-high-h'>Your Score is <span class="score-high"></span>% of your highscore</h3>
+    </main>
+  </body>
+</html>
+
+
+<script>
+
+  document.addEventListener('DOMContentLoaded', () => { 
+    //ask instructor about jquery (or look it up)
+  
+    //initialize firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyCSEc4Frt6zxQLHbxx8BlDFN3JEBDpfY3U",
+      authDomain: "tetris-d5b82.firebaseapp.com",
+      databaseURL: "https://tetris-d5b82.firebaseio.com",
+      projectId: "tetris-d5b82",
+      storageBucket: "tetris-d5b82.appspot.com",
+      messagingSenderId: "516949401716",
+      appId: "1:516949401716:web:427fbd696e239d5a0db121",
+      measurementId: "G-GL094PMQ1K"
+    };
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+        
+    
+    var firestore = firebase.firestore()
+
+    let newScore = parseInt(localStorage.getItem('newScore'))
+    
+    let highscores = []
+    
+    let leaders = []
+    
+    let iterator = 0
+    
+    var batch = firestore.batch()
+    
+    const leaderboardRef = firestore.collection('leaderboard')
+    const today = new Date()
+    const test = /\w/
+    let answer = '';
+    
+    const placeTenRef = firestore.doc('leaderboard/placeTen')
+    
+    let highScore = parseInt(localStorage.getItem('highScore'))
+    console.log(highScore)
+    
+    const savedName = localStorage.getItem('savedName')
+    
+    firestore.doc('takenNames/takenNames').get().then(function(doc) {
+      const takenNames = doc.data()
+      console.log(takenNames)
+      
+      function findName() {
+        for (var i = 0; i < takenNames.length; i++) {
+          if (takenNames[i] === answer) {
+            return false
+          }
+        }
+        return true
+      }
+      var searchedName = findName()
+      console.log(searchedName)
+      if (newScore > 0 && savedName == undefined) {
+        while (answer === undefined || answer === null || answer === '' || !test.test(answer) || searchedName === false) {
+          answer = prompt('Please Enter Your Name for the Leaderboard (Please Note that Your Name Will Stay the Same on Your Device)')
+          localStorage.setItem('savedName', answer)
+          console.log(savedName)
+          if (answer === undefined || answer === null || answer === '' || !test.test(answer)) {
+            alert('Please Enter A Name')
+          } else if (searchedName === false) {
+            alert('taken')
+          }
+        }
+      } else if (savedName !== undefined) {
+        answer = savedName
+        console.log(answer)
+      }
+      const nameDocRef = firestore.doc(`highscores/${answer}s Highscore`)
+      
+      function compareValues(key, order = 'asc') {
+          return function innerSort(a, b) {
+            if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
+              return 0;
+            }
+            const varA = (typeof a[key] === 'string')
+            ? a[key].toUpperCase() : a[key];
+            const varB = (typeof b[key] === 'string')
+            ? b[key].toUpperCase() : b[key];
+                                              
+            let comparison = 0;
+            if (varA > varB) {
+              comparison = 1;
+            } else if (varA < varB) {
+              comparison = -1;
+            }
+            return (
+              (order === 'desc') ? (comparison * -1) : comparison
+            );
+          };
+      }
+      
+      leaderboardRef.get().then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+          // doc.data() is never undefined for query doc snapshotsx
+          leaders.push({title: doc.id, score: doc.data().score, name: doc.data().name, date: doc.data().date})
+          console.log(doc.ref)
+        });
+        
+        placeTenRef.get().then(function(doc) {
+          if (newScore > doc.data().score) {
+            leaders.push({title: 'newScore', score: newScore, name: answer, date: today.toDateString()})
+          }
+        })
+        
+        
+        leaders.sort(compareValues('score', 'desc'))    
+        console.log(leaders)
+        for (var i = 0; i < leaders.length; i++) {
+          if (leaders[i].title === 'placeTen') {
+            leaders[i].title = 'place10'
+          }
+        }
+        
+        querySnapshot.forEach(function(doc) {
+          batch.update(doc.ref, { score: leaders[iterator].score, name: leaders[iterator].name, date: leaders[iterator].date })
+          iterator++
+        });
+        batch.commit()
+        
+        let percent = (newScore / highScore) * 100
+        $(".score-high").append(percent.toPrecision(3))
+        
+        localStorage.setItem('newScore', 0)
+          
+        for (var i = 0; i < leaders.length; i++) {
+          if (leaders[i].score > 0) {
+            console.log($('.score'))
+            $(`.score`)[i].append(leaders[i].score)
+            $(`.name`)[i].append(leaders[i].name)
+            $(`.date`)[i].append(leaders[i].date)
+          }
+        }
+      });
+      
+      console.log(highScore)
+      $('.high-score').empty()
+      $('.high-score').append(highScore)
+    
+      return firestore.runTransaction(function(transaction) {
+          return transaction.get(nameDocRef).then(function(nameDoc) {
+            if (nameDoc.exists) {
+              console.log('did exist')
+              const savedHighScore = nameDoc.data().score
+              if (highScore > savedHighScore) {
+                transaction.update(nameDocRef, { score: parseInt(highScore) });
+                console.log('saved')
+              }
+            } else {
+              transaction.set({
+                score: parseInt(highScore)
+              })
+              console.log('didnt exist')
+            }
+            firestore.collection('highscores').get().then(function(querySnapshot) {
+              querySnapshot.forEach(function(doc) {
+                highscores.push(doc.data().score)
+              })
+              highscores.sort(function(a, b){return b-a});
+              for (var i = 0; i < highscores.length; i++) {
+                console.log(i)
+                console.log(highscores)
+                if (highscores[i] === parseInt(highScore)) {
+                  var place = i + 1
+                }
+              }
+              place = (place / highscores.length) * 100
+              console.log(place + '%')
+              
+              $('.place').empty()
+              $('.place').append(place)
+              console.log(newScore)
+              if (parseInt(highScore) === 0) {
+                $('h3').empty()
+                $('.high-score').append('Play a <a href="game.html">Game</a> to see Stats!')
+              } else if (parseInt(newScore) === 0) {
+                $('.score-high-h').empty()
+                $('.score-high-h').append('Play a <a href="game.html">Game</a> to see your score compared to your high score!')
+              }
+            })
+          });
+      }).then(function() {
+          console.log("Transaction successfully committed!");
+      }).catch(function(error) {
+          console.log("Transaction failed: ", error);
+      });
+    })
+    
+    /*if (newScore > 0 && savedName == undefined) {
+      while (answer === undefined || answer === null || answer === '' || !test.test(answer)) {
+        answer = prompt('Please Enter Your Name for the Leaderboard (Please Note that Your Name Will Stay the Same on Your Device)')
+        localStorage.setItem('savedName', answer)
+        console.log(savedName)
+        if (answer === undefined || answer === null || answer === '' || !test.test(answer)) {
+          alert('Please Enter A Name')
+        }
+      }
+    } else if (savedName !== undefined) {
+      answer = savedName
+      console.log(answer)
+    }*/
+      
+  })
+</script>
